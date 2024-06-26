@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store.ts'
@@ -31,6 +32,8 @@ export default function Main() {
 
     const [isContent, setIsContent] = useState(false);
     const [isAllField, setIsAllField] = useState(false);
+
+    const navigate = useNavigate()
 
     const AirportData = JSON.parse(localStorage.getItem('Airport') || '[]');
 
@@ -79,6 +82,12 @@ export default function Main() {
         }
     }, [airframeState, flightState, airportState]);
 
+    const handleStartFlight = () => {
+        if (isAllField) {
+            navigate('/efb')
+        }
+    }
+
     return (
         <>
             <div className="flex w-full h-screen justify-center items-center relative">
@@ -123,6 +132,7 @@ export default function Main() {
                     <div className="flex w-full h-fit mb-8 px-8">
                         <button 
                             disabled={!isAllField}
+                            onClick={handleStartFlight}
                             className={`flex w-full h-fit py-2 rounded-lg justify-center items-center transition-all duration-200 ${isAllField ? `hover:bg-button-hover hover:border-button-border-hover` : `opacity-50`} bg-button border-button-border border-[2px]`}>
                             <p className="text-semibold uppercase text-text mt-0.5">START FLIGHT</p>
                         </button>
