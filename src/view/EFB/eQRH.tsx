@@ -2,16 +2,15 @@ import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 
 import Checklist from './eQRH/Checklist.tsx';
 
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store.ts';
+import { DataState } from '../../script/loadData.ts';
 
-export default function EQRH() {
+export default function EQRH({ data }: DataState) {
 
     const location = useLocation();
     const navigate = useNavigate();
     const currentPath = location.pathname;
 
-    const checklistData = useSelector((state: RootState) => state.checklist.checklist?.data);
+    const checklistData = data?.checklist?.data
 
     // Generate allowed paths dynamically based on checklist names
     const allowedPaths = checklistData
@@ -67,7 +66,7 @@ export default function EQRH() {
             </div>
             <div className={`flex flex-col items-center justify-center w-full h-[calc(100%_-_60px)] px-40 py-4`}>
                 <Routes>
-                    <Route path='/checklist/*' element={<Checklist />} />
+                    <Route path='/checklist/*' element={<Checklist data={data}/>} />
                 </Routes>
             </div>
         </div>

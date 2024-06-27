@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store.ts';
+import { useDispatch } from 'react-redux';
+import { DataState } from '../../../script/loadData.ts'
 import { updateChecklistStatus, resetChecklistStatus, updateSectionStatus, resetAllChecklistStatus } from '../../../redux/slice/checklistSlice.ts';
 
 import { TextButton } from '../../../components/Button.tsx'
 
-function DEFAULT() {
+function DEFAULT({ data }: DataState) {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    const checklistState = useSelector((state: RootState) => state.checklist)
+    const checklistState = data;
+    
     const handleChoose = (p: String) => {
         const formattedString = p.toLowerCase().replace(/\s+/g, '-');
         navigate(`/efb/eQRH/checklist/${formattedString}`);
@@ -47,14 +48,14 @@ function DEFAULT() {
     );
 }
 
-function ChecklistItem() {
+function ChecklistItem({ data }: DataState) {
     const [isNow, setIsNow] = useState(0);
     const [isOn, setIsOn] = useState<'top' | 'below'>('top');
     const [isFirst, setIsFirst] = useState<boolean>(false)
     const [isLast, setIsLast] = useState<boolean>(false)
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const checklistState = useSelector((state: RootState) => state.checklist);
+    const checklistState = data;
     const { name } = useParams<{ name: string }>();
 
     const sections = checklistState.checklist?.data;
@@ -292,12 +293,12 @@ function ChecklistItem() {
     );
 }
 
-export default function Checklist() {
+export default function Checklist({ data }: DataState) {
     return (
         <div className={`flex flex-col w-full max-w-[800px] h-full items-center bg-content rounded-lg border-border border-[2px]`}>
             <Routes>
-                <Route path='/' element={<DEFAULT />} />
-                <Route path=':name' element={<ChecklistItem />} />
+                <Route path='/' element={<DEFAULT data={data}/>} />
+                <Route path=':name' element={<ChecklistItem data={data}/>} />
             </Routes>
         </div>
     )

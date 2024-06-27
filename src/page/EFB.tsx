@@ -103,17 +103,18 @@ export default function EFB() {
     };
 
     const data = loadData();
+
     return (
         <div className="block w-full h-screen relative">
             <motion.div
                 initial="initial"
                 animate={isOpen ? "open" : "close"}
                 variants={MainVariant}
-                className="flex w-full justify-center items-center justify-center"
+                className="flex w-full justify-center items-center"
             >
                 <Routes>
                     <Route path="/" element={<DEFAULT data={data} />} />
-                    <Route path="/eQRH/*" element={<EQRH />} />
+                    <Route path="/eQRH/*" element={<EQRH data={data}/>} />
                 </Routes>
             </motion.div>
             <motion.ul
