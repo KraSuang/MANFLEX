@@ -14,12 +14,14 @@ import config from '../../package.json'
 
 import { Aircraft_Selector } from "../data/airframe/airframe_selector.ts"
 import { getAirframeById } from '../data/airframe/airframeData.ts'
+import { getChecklistById } from '../data/checklist/checklistData.ts'
 
 import { setAirframe } from '../redux/slice/airframeSlice.ts'
 import { setFlightNo } from '../redux/slice/flightSlice.ts'
 import { setRegistration } from '../redux/slice/flightSlice.ts'
 import { setOrigin } from '../redux/slice/airportSlice.ts'
 import { setDestination } from '../redux/slice/airportSlice.ts'
+import { setChecklist } from '../redux/slice/checklistSlice.ts'
 
 import Content from '../view/Content.tsx'
 import ComboBox from '../components/ComboBox.tsx'
@@ -29,6 +31,7 @@ export default function Main() {
     const airframeState = useSelector((state: RootState) => state.airframe.selectedAirframe);
     const flightState = useSelector((state: RootState) => state.flight);
     const airportState = useSelector((state: RootState) => state.airport);
+    const checklistState = useSelector((state: RootState) => state.checklist)
 
     const [isContent, setIsContent] = useState(false);
     const [isAllField, setIsAllField] = useState(false);
@@ -47,8 +50,13 @@ export default function Main() {
 
     const handleAirframeSelect = (id: string) => {
         const airframe = getAirframeById(id);
+        const checklist = getChecklistById(id)
         if (airframe) {
             dispatch(setAirframe(airframe));
+        }
+
+        if (checklist) {
+            dispatch(setChecklist(checklist))
         }
     };
 
@@ -74,7 +82,8 @@ export default function Main() {
             flightState.registration.trim() !== '' &&
             flightState.flightNo.trim() !== '' &&
             airportState.origin &&
-            airportState.destination
+            airportState.destination &&
+            checklistState.checklist
         ) {
             setIsAllField(true);
         } else {
@@ -87,6 +96,18 @@ export default function Main() {
             navigate('/efb')
         }
     }
+
+    console.log({
+        message: 'Data to use',
+        airframe: airframeState,
+        flightNo: flightState.flightNo,
+        reg: flightState.registration,
+        airport: {
+            origin: airportState.origin,
+            destination: airportState.destination
+        },
+        checklist: checklistState.checklist
+    })
 
     return (
         <>
