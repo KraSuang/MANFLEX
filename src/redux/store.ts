@@ -4,11 +4,13 @@ import storage from 'redux-persist/lib/storage';
 import airframeReducer from './slice/airframeSlice.ts';
 import flightReducer from './slice/flightSlice.ts';
 import airportReducer from './slice/airportSlice.ts';
+import checklistReducer from './slice/checklistSlice.ts';
 
 const rootReducer = combineReducers({
     airframe: airframeReducer,
     flight: flightReducer,
     airport: airportReducer,
+    checklist: checklistReducer
 });
 
 const persistConfig = {
