@@ -1,21 +1,26 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import airframeReducer from './slice/airframeSlice.ts';
-import flightReducer from './slice/flightSlice.ts';
-import airportReducer from './slice/airportSlice.ts';
-import checklistReducer from './slice/checklistSlice.ts';
+import airframeReducer from './slice/airframeSlice';
+import flightReducer from './slice/flightSlice';
+import airportReducer from './slice/airportSlice';
+import checklistReducer from './slice/checklistSlice';
+import performanceReducer from './slice/performanceSlice';
+import resetReducer from './slice/resetAllSlice.ts';
 
 const rootReducer = combineReducers({
     airframe: airframeReducer,
     flight: flightReducer,
     airport: airportReducer,
-    checklist: checklistReducer
+    checklist: checklistReducer,
+    performance: performanceReducer,
+    reset: resetReducer,
 });
 
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['reset'], // Prevent reset slice from being persisted
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

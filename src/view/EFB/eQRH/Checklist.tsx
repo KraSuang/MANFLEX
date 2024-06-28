@@ -11,7 +11,7 @@ function DEFAULT({ data }: DataState) {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    const checklistState = data;
+    const checklistState = data.checklist;
     
     const handleChoose = (p: String) => {
         const formattedString = p.toLowerCase().replace(/\s+/g, '-');
@@ -34,7 +34,7 @@ function DEFAULT({ data }: DataState) {
     return (
         <div className={`flex flex-col w-full h-full p-6 justify-between`}>
             <div className={`block w-full h-fit`}>
-                {checklistState.checklist?.data.map((d, i) => (
+                {checklistState?.map((d, i) => (
                     <button
                         key={i}
                         onClick={() => handleChoose(d.name)}
@@ -58,7 +58,7 @@ function ChecklistItem({ data }: DataState) {
     const checklistState = data;
     const { name } = useParams<{ name: string }>();
 
-    const sections = checklistState.checklist?.data;
+    const sections = checklistState.checklist;
     const sectionIndex = sections?.findIndex(d => d.name.toLowerCase().replace(/\s+/g, '-') === name);
     const section = sectionIndex !== undefined && sections ? sections[sectionIndex] : null;
 

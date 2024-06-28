@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { resetAll } from './resetAllSlice.ts';
 export interface FlightState {
     registration: string;
     flightNo: string;
@@ -20,6 +20,9 @@ const flightSlice = createSlice({
         setFlightNo: (state, action: PayloadAction<string>) => {
             state.flightNo = action.payload;
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAll, () => initialState);
     },
 });
 

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Airport } from '../../data/type/airport.h';
+import { resetAll } from './resetAllSlice.ts'
 
 export interface AirportState {
     origin: Airport | null;
@@ -21,6 +22,9 @@ const airportSlice = createSlice({
         setDestination: (state, action: PayloadAction<Airport>) => {
             state.destination = action.payload;
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAll, () => initialState);
     },
 });
 

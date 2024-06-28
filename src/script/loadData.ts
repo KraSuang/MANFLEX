@@ -4,6 +4,7 @@ import { RootState } from "../redux/store.ts";
 import { Airframe } from "../data/type/airframe.h.ts";
 import { Airport } from "../data/type/airport.h.ts";
 import { Checklist } from '../data/type/checklist.h.ts';
+import { LoadSheet } from "../data/type/loadSheet.ts";
 
 export type DataState = { 
     data: DataStore
@@ -18,6 +19,9 @@ type DataStore = {
         destination: Airport | null
     }
     checklist: Checklist | null
+    performance: {
+        loadSheet: LoadSheet | null
+    }
 }
 
 export const loadData = () => {
@@ -25,6 +29,7 @@ export const loadData = () => {
     const flightState = useSelector((state: RootState) => state.flight);
     const airportState = useSelector((state: RootState) => state.airport);
     const checklistState = useSelector((state: RootState) => state.checklist);
+    const performance = useSelector((state: RootState) => state.performance)
 
     const datas: DataStore = {
         airframe: airframeState,
@@ -34,7 +39,10 @@ export const loadData = () => {
             origin: airportState.origin,
             destination: airportState.destination
         },
-        checklist: checklistState.checklist
+        checklist: checklistState.data,
+        performance: {
+            loadSheet: performance.loadSheet
+        }
     }
 
     return datas;
