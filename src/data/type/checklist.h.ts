@@ -1,6 +1,4 @@
-export type Checklist = {
-    data: ChecklistSection[]
-}
+export type Checklist = ChecklistSection[]
 
 type ChecklistSection = {
     name: String

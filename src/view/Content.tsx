@@ -36,7 +36,7 @@ export default function Content({ isOpen, onClose }: ContentProps) {
         if (isICAO.length === 4) {
             const fetchData = async () => {
                 try {
-                    const response = await axios.get<Airport>(`http://localhost:10154/api/airport/download/`, {
+                    const response = await axios.get<Airport>(`http://10.10.10.153:10154/api/airport/download/`, {
                         params: {
                             icao: isICAO
                         }

@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Checklist } from './../../data/type/checklist.h.ts';
+import { resetAll } from './resetAllSlice.ts';
 
 export interface ChecklistState {
-    checklist: Checklist | null;
+    data: Checklist | null;
 }
 
 const initialState: ChecklistState = {
-    checklist: null
+    data: null
 };
 
 interface UpdatePayload {
@@ -30,12 +31,12 @@ const checklistSlice = createSlice({
     initialState,
     reducers: {
         setChecklist: (state, action: PayloadAction<Checklist>) => {
-            state.checklist = action.payload;
+            state.data = action.payload;
         },
         updateChecklistStatus: (state, action: PayloadAction<UpdatePayload>) => {
             const { sectionName, itemIndex, itemType, status } = action.payload;
             
-            const section = state.checklist?.data.find(section => section.name === sectionName);
+            const section = state.data?.find(section => section.name === sectionName);
 
             if (section) {
                 if (itemType === 'top' && section.top[itemIndex]) {
@@ -48,7 +49,7 @@ const checklistSlice = createSlice({
         resetChecklistStatus: (state, action: PayloadAction<ResetPayload>) => {
             const { sectionName } = action.payload;
 
-            const section = state.checklist?.data.find(section => section.name === sectionName);
+            const section = state.data?.find(section => section.name === sectionName);
 
             if (section) {
                 section.top.forEach(item => item.status = 'none');
@@ -61,7 +62,7 @@ const checklistSlice = createSlice({
         updateSectionStatus: (state, action: PayloadAction<UpdateSectionStatusPayload>) => {
             const { sectionName, status } = action.payload;
 
-            const section = state.checklist?.data.find(section => section.name === sectionName);
+            const section = state.data?.find(section => section.name === sectionName);
 
             if (section) {
                 section.status = status;
@@ -69,8 +70,8 @@ const checklistSlice = createSlice({
         },
 
         resetAllChecklistStatus: (state) => {
-            if (state.checklist) {
-                state.checklist.data.forEach(section => {
+            if (state.data) {
+                state.data.forEach(section => {
                     section.status = 'none';
                     section.top.forEach(item => item.status = 'none');
                     if (section.below) {
@@ -79,6 +80,10 @@ const checklistSlice = createSlice({
                 });
             }
         },
+    },
+
+    extraReducers: (builder) => {
+        builder.addCase(resetAll, () => initialState);
     },
 });
 
