@@ -21,7 +21,12 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+        "@manflex/wasm": ["./src/wasm/index.ts"],
+        "@manflex/formula-A20N": ["./src/system/a20n/index.ts"],
+        "@manflex/formula-common": ["./src/system/common/index.ts"],
+    }
   },
   "include": ["src"]
 }
