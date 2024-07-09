@@ -44,6 +44,17 @@ interface UpdateCrew {
     cbc: number
 }
 
+interface UpdatePAX {
+    front: number 
+    middle: number
+    rear: number
+}
+interface UpdateCARGO {
+    front: number 
+    middle: number
+    rear: number
+}
+
 const performanceSlice = createSlice({
     name: 'performance',
     initialState,
@@ -55,6 +66,24 @@ const performanceSlice = createSlice({
             state.loadSheet.CREW.cbc = cbc;
 
         },
+
+        setPAX: (state, action: PayloadAction<UpdatePAX>) => {
+            const { front, middle, rear } = action.payload;
+
+            state.loadSheet.PAX.front = front;
+            state.loadSheet.PAX.middle = middle;
+            state.loadSheet.PAX.rear = rear;
+
+        },
+
+        setCARGO: (state, action: PayloadAction<UpdateCARGO>) => {
+            const { front, middle, rear } = action.payload;
+
+            state.loadSheet.CARGO.front = front;
+            state.loadSheet.CARGO.middle = middle;
+            state.loadSheet.CARGO.rear = rear;
+
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(resetAll, () => initialState);
@@ -63,5 +92,7 @@ const performanceSlice = createSlice({
 
 export const {
     setCrew,
+    setPAX,
+    setCARGO
 } = performanceSlice.actions;
 export default performanceSlice.reducer;
