@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../redux/store.ts'
+import { RootState, persistor } from '../redux/store.ts'
 
 import { Selector } from "../components/Selector.tsx"
 import { Textfield } from "../components/Textfield.tsx"
@@ -14,12 +14,15 @@ import config from '../../package.json'
 
 import { Aircraft_Selector } from "../data/airframe/airframe_selector.ts"
 import { getAirframeById } from '../data/airframe/airframeData.ts'
+import { getChecklistById } from '../data/checklist/checklistData.ts'
 
 import { setAirframe } from '../redux/slice/airframeSlice.ts'
 import { setFlightNo } from '../redux/slice/flightSlice.ts'
 import { setRegistration } from '../redux/slice/flightSlice.ts'
 import { setOrigin } from '../redux/slice/airportSlice.ts'
 import { setDestination } from '../redux/slice/airportSlice.ts'
+import { setChecklist } from '../redux/slice/checklistSlice.ts'
+import { resetAll } from '../redux/slice/resetAllSlice.ts'
 
 import Content from '../view/Content.tsx'
 import ComboBox from '../components/ComboBox.tsx'
@@ -29,6 +32,7 @@ export default function Main() {
     const airframeState = useSelector((state: RootState) => state.airframe.selectedAirframe);
     const flightState = useSelector((state: RootState) => state.flight);
     const airportState = useSelector((state: RootState) => state.airport);
+    const checklistState = useSelector((state: RootState) => state.checklist)
 
     const [isContent, setIsContent] = useState(false);
     const [isAllField, setIsAllField] = useState(false);
@@ -36,6 +40,13 @@ export default function Main() {
     const navigate = useNavigate()
 
     const AirportData = JSON.parse(localStorage.getItem('Airport') || '[]');
+
+    const handleResetDataRedux = () => {
+        dispatch(resetAll());
+        localStorage.removeItem('destinationAirport',)
+        localStorage.removeItem('originAirport')
+        persistor.purge();
+    };
 
     const handleOpenContent = () => {
         setIsContent(true);
@@ -47,8 +58,13 @@ export default function Main() {
 
     const handleAirframeSelect = (id: string) => {
         const airframe = getAirframeById(id);
+        const checklist = getChecklistById(id)
         if (airframe) {
             dispatch(setAirframe(airframe));
+        }
+
+        if (checklist) {
+            dispatch(setChecklist(checklist))
         }
     };
 
@@ -74,7 +90,8 @@ export default function Main() {
             flightState.registration.trim() !== '' &&
             flightState.flightNo.trim() !== '' &&
             airportState.origin &&
-            airportState.destination
+            airportState.destination &&
+            checklistState.data
         ) {
             setIsAllField(true);
         } else {
@@ -88,10 +105,23 @@ export default function Main() {
         }
     }
 
+    console.log({
+        message: 'Data to use',
+        airframe: airframeState,
+        flightNo: flightState.flightNo,
+        reg: flightState.registration,
+        airport: {
+            origin: airportState.origin,
+            destination: airportState.destination
+        },
+        checklist: checklistState.data
+    })
+
     return (
         <>
             <div className="flex w-full h-screen justify-center items-center relative">
                 <div className="fixed flex w-full h-[40px] bg-content top-0 border-b-[2px] border-border items-center justify-end px-4">
+                    <TextButton title="Reset Redux" className="px-2 py-1 mr-1 text-xs" onClick={handleResetDataRedux} />
                     <TextButton title="Content Manager" className="px-2 py-1 text-xs" onClick={handleOpenContent} />
                 </div>
                 <div className="block w-full max-w-[600px] h-fit bg-content border-border border-[2px] rounded-xl">
@@ -130,7 +160,7 @@ export default function Main() {
                         </div>
                     </div>
                     <div className="flex w-full h-fit mb-8 px-8">
-                        <button 
+                        <button
                             disabled={!isAllField}
                             onClick={handleStartFlight}
                             className={`flex w-full h-fit py-2 rounded-lg justify-center items-center transition-all duration-200 ${isAllField ? `hover:bg-button-hover hover:border-button-border-hover` : `opacity-50`} bg-button border-button-border border-[2px]`}>

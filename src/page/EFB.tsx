@@ -6,6 +6,7 @@ import { BiSolidPlaneTakeOff, BiSolidPlaneLand } from "react-icons/bi";
 import { motion } from "framer-motion";
 
 import EQRH from "../view/EFB/eQRH.tsx";
+import LoadSheet from "../view/EFB/LoadSheet.tsx";
 
 import { DataState, loadData } from "../script/loadData.ts";
 
@@ -26,22 +27,21 @@ function DEFAULT({ data }: DataState) {
             </div>
             <div className="flex w-full h-fit justify-between text-text mt-8 mb-2">
                 <p>MTOW</p>
-                <p>{data.airframe?.MTOW}</p>
+                <p>{((data.airframe?.performance.MTOW ?? 0) / 1000).toFixed(1)} T</p>
             </div>
             <div className="flex w-full h-fit justify-between text-text my-2">
                 <p>MLW</p>
-                <p>{data.airframe?.MLW}</p>
+                <p>{((data.airframe?.performance.MLW ?? 0) / 1000).toFixed(1)} T</p>
             </div>
             <div className="flex w-full h-fit justify-between text-text my-2">
                 <p>MZFW</p>
-                <p>{data.airframe?.MZFW}</p>
+                <p>{((data.airframe?.performance.ZFW.max ?? 0) / 1000).toFixed(1)} T</p>
             </div>
         </div>
     );
 }
 
 export default function EFB() {
-
     const NavItems = [
         { title: 'eQRH', icon: <FaBook />, path: 'eQRH' },
         { title: 'LoadSheet', icon: <FaSheetPlastic />, path: 'loadsheet' },
@@ -103,17 +103,19 @@ export default function EFB() {
     };
 
     const data = loadData();
+
     return (
         <div className="block w-full h-screen relative">
             <motion.div
                 initial="initial"
                 animate={isOpen ? "open" : "close"}
                 variants={MainVariant}
-                className="flex w-full justify-center items-center justify-center"
+                className={`flex w-full justify-center items-center`}
             >
                 <Routes>
                     <Route path="/" element={<DEFAULT data={data} />} />
-                    <Route path="/eQRH/*" element={<EQRH />} />
+                    <Route path="/eQRH/*" element={<EQRH data={data}/>} />
+                    <Route path="/loadsheet" element={<LoadSheet data={data} />} />
                 </Routes>
             </motion.div>
             <motion.ul
